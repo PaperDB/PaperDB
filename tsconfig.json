@@ -1,0 +1,23 @@
+{
+    "compilerOptions": {
+        "target": "es2019",
+        "lib": [
+            "es2019",
+        ],
+        "module": "commonjs",
+        "moduleResolution": "node",
+        "esModuleInterop": true,
+        "resolveJsonModule": true,
+        "strictNullChecks": true,
+        "sourceMap": false,
+        "declaration": true,
+        "newLine": "lf",
+        "outDir": "dist",
+        "baseUrl": ".",
+        "paths": {
+            "~*": [
+                "./src/*"
+            ]
+        }
+    }
+}

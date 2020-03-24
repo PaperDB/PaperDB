@@ -1,0 +1,50 @@
+{
+  "name": "paper-db",
+  "description": "",
+  "version": "0.1.0",
+  "main": "dist/index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/232c/PaperDB.git"
+  },
+  "license": "GPL-3.0-or-later",
+  "bugs": {
+    "url": "https://github.com/232c/PaperDB/issues"
+  },
+  "homepage": "https://github.com/232c/PaperDB#readme",
+  "files": [
+    "dist",
+    "src",
+    "tsconfig.json",
+    ".eslintrc"
+  ],
+  "dependencies": {
+    "@232c/kv-storage": "^2.0.1",
+    "ipfs": "^0.41.2",
+    "ipfs-http-client": "^42.0.0",
+    "@232c/orbit-db": "^0.24.0"
+  },
+  "devDependencies": {
+    "@types/jest": "^25.1.4",
+    "@types/orbit-db": "git+https://github.com/232c/orbit-db-types.git",
+    "jest": "^25.1.0",
+    "ts-jest": "^25.2.1",
+    "typescript": "^3.8.3"
+  },
+  "jest": {
+    "preset": "ts-jest",
+    "verbose": true,
+    "moduleNameMapper": {
+      "^~/(.*)$": "<rootDir>/src/$1"
+    },
+    "coveragePathIgnorePatterns": [
+      "<rootDir>/test/",
+      "<rootDir>/node_modules/"
+    ]
+  },
+  "scripts": {
+    "build": "tsc",
+    "watch": "tsc --watch",
+    "test": "jest --coverage --forceExit"
+  }
+}

@@ -1,0 +1,16 @@
+{
+    "eslint.options": {},
+    "eslint.validate": [
+        "javascript",
+        { "language": "typescript", "autoFix": true }
+    ],
+    "editor.tabSize": 2,
+    "typescript.tsdk": "node_modules/typescript/lib",
+    "javascript.format.insertSpaceBeforeFunctionParenthesis": true,
+    "typescript.format.insertSpaceBeforeFunctionParenthesis": true,
+    "javascript.format.insertSpaceAfterConstructor": true,
+    "typescript.format.insertSpaceAfterConstructor": true,
+    "editor.codeActionsOnSave": {
+        "source.fixAll.eslint": true
+    },
+}
