@@ -20,14 +20,17 @@
   ],
   "dependencies": {
     "@232c/kv-storage": "^2.0.1",
+    "@232c/orbit-db": "^0.24.0",
     "ipfs": "^0.41.2",
-    "ipfs-http-client": "^42.0.0",
-    "@232c/orbit-db": "^0.24.0"
+    "ipfs-http-client": "^42.0.0"
   },
   "devDependencies": {
+    "@types/fs-extra": "^8.1.0",
     "@types/jest": "^25.1.4",
     "@types/orbit-db": "git+https://github.com/232c/orbit-db-types.git",
+    "fs-extra": "^8.1.0",
     "jest": "^25.1.0",
+    "rimraf": "^3.0.2",
     "ts-jest": "^25.2.1",
     "typescript": "^3.8.3"
   },
