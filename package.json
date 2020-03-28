@@ -46,8 +46,8 @@
     ]
   },
   "scripts": {
-    "build": "tsc",
-    "watch": "tsc --watch",
+    "build": "tsc -p src",
+    "watch": "npm run build -- --watch",
     "test": "jest --coverage --forceExit"
   }
 }
