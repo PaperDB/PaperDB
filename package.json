@@ -48,6 +48,7 @@
   "scripts": {
     "build": "tsc -p src",
     "watch": "npm run build -- --watch",
+    "clean": "rimraf dist",
     "test": "jest --coverage --forceExit"
   }
 }
