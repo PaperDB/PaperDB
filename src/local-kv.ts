@@ -4,8 +4,8 @@
 
 import path from 'path'
 
-import { KVStorage } from '@232c/kv-storage'
-import type { VALUE } from '@232c/kv-storage/src/interface'
+import { KVStorage } from '@paper-db/kv-storage'
+import type { VALUE } from '@paper-db/kv-storage/src/interface'
 import { Options, DEFAULT_OPTIONS } from './options'
 
 /**
@@ -167,7 +167,7 @@ export class Namespace {
  */
 export class LocalKVStorage {
   /**
-   * @param kvstorage an initialized `@232c/kv-storage` instance
+   * @param kvstorage an initialized `@paper-db/kv-storage` instance
    */
   constructor (public kvstorage: KVStorage) { }
 
