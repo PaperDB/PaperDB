@@ -1,6 +1,6 @@
 {   
     "compilerOptions": {
-        "target": "es2019",
+        "target": "es5",
         "lib": [
             "es2019",
         ],
@@ -12,13 +12,9 @@
         "sourceMap": false,
         "declaration": true,
         "declarationMap": true,
+        "experimentalDecorators": true,
         "newLine": "lf",
         "outDir": "dist",
         "baseUrl": ".",
-        "paths": {
-            "~*": [
-                "./src/*"
-            ]
-        }
     }
 }
