@@ -1,5 +1,5 @@
 
-import { LocalKVStorage, Namespace, Record, STORAGE_CLOSED_ERR, NAMESPACE_SEP } from '~/local-kv.ts'
+import { LocalKVStorage, Namespace, Record, STORAGE_CLOSED_ERR, NAMESPACE_SEP } from '../src/local-kv'
 import { rmrf } from './utils'
 import path from 'path'
 import fs from 'fs-extra'
