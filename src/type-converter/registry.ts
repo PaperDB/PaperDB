@@ -49,8 +49,8 @@ export class ConverterRegistry {
     }
 
     // validate the TypedObj converter
-    const valid = converter.type === type &&
-      (converter.version ? converter.version === version : true)
+    const valid = converter.$type === type &&
+      (converter.$v ? converter.$v === version : true)
     if (!valid) {
       throw ERR_CONVERTER_UNMATCH
     }
@@ -62,8 +62,8 @@ export class ConverterRegistry {
    * add a TypedObj converter to the registry
    */
   add (converter: Converter): this {
-    const $type = converter.type
-    const $v = converter.version ?? 1 // the default version is `1`
+    const $type = converter.$type
+    const $v = converter.$v ?? 1 // the default version is `1`
 
     const verReg: VersionReg | undefined = this.typeReg.get($type)
     if (!verReg) {
@@ -90,4 +90,15 @@ export class ConverterRegistry {
 
     return Reflect.deleteProperty(verReg, version)
   }
+}
+
+/**
+ * the registration map for the readonly ConverterRegistry
+ */
+interface Registration {
+  [type: string]: Converter;
+}
+
+export interface ReadonlyConverterRegistry<M extends Registration> {
+  get<T extends keyof M> (type: T): M[T];
 }
