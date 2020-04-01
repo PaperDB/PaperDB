@@ -3,7 +3,7 @@
  * Date
  */
 
-import { TypedObj, Conversion } from '../type-converter'
+import { TypedObj, Conversion, ERR_TYPED_OBJ_INVALID } from './converter'
 
 export interface PaperDBDateObj extends TypedObj<'date'> {
   iso8601: string;
@@ -24,7 +24,15 @@ export class PaperDBDate extends Date {
     }
   }
 
-  static fromTypedObj (obj: PaperDBDateObj): PaperDBDate {
+  static fromTypedObj (obj: PaperDBDateObj | PaperDBDate | Date): PaperDBDate {
+    if (obj instanceof Date) {
+      return new PaperDBDate(obj)
+    }
+
+    if (obj.$type !== 'date' || typeof obj.iso8601 !== 'string') {
+      throw ERR_TYPED_OBJ_INVALID
+    }
+
     return new PaperDBDate(obj.iso8601)
   }
 }

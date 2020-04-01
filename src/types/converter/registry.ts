@@ -91,14 +91,3 @@ export class ConverterRegistry {
     return Reflect.deleteProperty(verReg, version)
   }
 }
-
-/**
- * the registration map for the readonly ConverterRegistry
- */
-interface Registration {
-  [type: string]: Converter;
-}
-
-export interface ReadonlyConverterRegistry<M extends Registration> {
-  get<T extends keyof M> (type: T): M[T];
-}

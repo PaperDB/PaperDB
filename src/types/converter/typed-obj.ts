@@ -7,7 +7,7 @@
  * Designed to be a universal object notation for complex objects,  
  * or types that json doesn't support natively (such as Date, BigInt, literal undefined, etc.)
  */
-export interface TypedObj<Type extends string, Version extends number = never> {
+export type TypedObj<Type extends string, Version extends number = 1> = {
   /**
    * name of the object type
    * 
@@ -28,4 +28,4 @@ export interface TypedObj<Type extends string, Version extends number = never> {
    * If omitted, the default version is `1` when parsing
    */
   $v?: Version;
-}
+} & (Version extends 1 ? {} : { $v: Version }) // the `$v` property is optional when `Version` is omitted or `Version` is 1
