@@ -16,5 +16,6 @@
         "newLine": "lf",
         "outDir": "dist",
         "baseUrl": ".",
+        "importHelpers": true,
     }
 }
