@@ -32,7 +32,9 @@ export class ConverterRegistry {
 
     // add initial converters to the registry
     converters.forEach((c) => {
-      this.add(c)
+      if (c) {
+        this.add(c)
+      }
     })
   }
 
@@ -78,12 +80,13 @@ export class ConverterRegistry {
     const $type = converter.$type
     const $v = converter.$v ?? 1 // the default version is `1`
 
-    const verReg: VersionReg | undefined = this.typeReg.get($type)
+    let verReg: VersionReg | undefined = this.typeReg.get($type)
     if (!verReg) {
-      this.typeReg.set($type, {})
+      verReg = {}
+      this.typeReg.set($type, verReg)
     }
 
-    (verReg as VersionReg)[$v] = converter
+    verReg[$v] = converter
 
     return this
   }

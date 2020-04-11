@@ -1,6 +1,6 @@
 
 import IPFS from 'ipfs'
-import OrbitDB from 'orbit-db'
+import OrbitDB from '@paper-db/orbit-db'
 import Identities, { Identity } from 'orbit-db-identity-provider'
 import AccessControllers from 'orbit-db-access-controllers'
 import path from 'path'

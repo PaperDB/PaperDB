@@ -4,7 +4,7 @@
 
 import AccessController from 'orbit-db-access-controllers/src/access-controller-interface'
 import Identities from 'orbit-db-identity-provider'
-import OrbitDB from 'orbit-db'
+import OrbitDB from '@paper-db/orbit-db'
 
 export type ACCallback<T = any> = (entry: OrbitDBEntryLog<T>, identitiesProvider?: Identities) => Promise<boolean> | boolean
 

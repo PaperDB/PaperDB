@@ -1,6 +1,6 @@
 
 import { posix as path } from 'path'
-import OrbitDB from 'orbit-db'
+import OrbitDB from '@paper-db/orbit-db'
 
 interface OrbitDBAddress {
   /**
