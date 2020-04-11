@@ -101,7 +101,8 @@ export class IPFSIdentityProvider extends IdentityProvider {
    */
   async getId (): Promise<string> {
     const keyPair = await this._lookupKey()
-    return keyPair.public.marshal().toString('hex')
+    const publicKey = keyPair.public
+    return crypto.keys.marshalPublicKey(publicKey, 'rsa').toString('hex')
   }
 
   /**
