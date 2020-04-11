@@ -3,6 +3,7 @@
  */
 
 import path from 'path'
+import fs from 'fs-extra'
 
 import { KVStorage } from '@paper-db/kv-storage'
 import type { VALUE } from '@paper-db/kv-storage/src/interface'
@@ -204,11 +205,14 @@ export class LocalKVStorage {
       throw new TypeError('The `name` option must be alphanumeric, with underscores (`/^\\w+$/`)')
     }
 
+    const storagePath = path.join(directory, 'kvstorage')
+    await fs.ensureDir(storagePath)
+
     const kvstorage = new KVStorage({
       name,
       storeName: 'kvstorage',
       dbKey: name,
-      path: path.join(directory, 'kvstorage'),
+      path: storagePath,
     })
 
     await kvstorage.ready()

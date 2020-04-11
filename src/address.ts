@@ -24,6 +24,7 @@ export const ORBIT_DATASTORE_NAME = 'paperdb'
  * @param id the PaperDB Collection id
  */
 export const toOrbitDBAddr = (collectionId: string): string => {
+  // import { posix as path } from 'path'
   return path.join('/orbitdb', collectionId, ORBIT_DATASTORE_NAME)
 }
 
