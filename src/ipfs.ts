@@ -1,7 +1,7 @@
 
 import IPFS from 'ipfs'
 import CID from 'cids'
-import { path as isIPFSPath } from 'is-ipfs'
+import { path as isIPFSPath, cid as isIPFSCid } from 'is-ipfs'
 
 import { Options, DEFAULT_OPTIONS } from './options'
 import { KEYS_PASSWD, IPFS_CONFIG } from './constants'
@@ -67,11 +67,9 @@ export const createIPFSInstance = async (options?: Options): Promise<IPFS> => {
 export const stringifyIPFSPath = (ipfsPath: string | CID): string => {
   if (CID.isCID(ipfsPath)) {
     return (ipfsPath as CID).toString()
-  } else {
-    if (!isIPFSPath(ipfsPath)) {
-      throw new TypeError('The `ipfsPath` provided is invalid.')
-    }
-
+  } else if (isIPFSPath(ipfsPath) || isIPFSCid(ipfsPath)) {
     return ipfsPath as string
+  } else {
+    throw new TypeError('The `ipfsPath` provided is invalid.')
   }
 }

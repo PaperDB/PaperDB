@@ -105,7 +105,6 @@ export class PaperOrbitDB {
   private logstore (address: string, options?: OrbitDBIStoreOptions & StoreOptions): Promise<LogStore> {
     options = Object.assign({
       create: true,
-      format: 'dag-pb',
       pin: true,
       type: LogStore.type,
       accessController: {
