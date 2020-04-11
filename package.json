@@ -1,5 +1,5 @@
 {
-  "name": "paper-db",
+  "name": "@paper-db/paper-db",
   "description": "The distributed, peer-to-peer, realtime, Firestore-like No-SQL database solution, based on IPFS and Orbit-DB",
   "version": "0.1.0",
   "main": "dist/index.js",
