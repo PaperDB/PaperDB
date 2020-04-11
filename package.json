@@ -1,6 +1,6 @@
 {
   "name": "paper-db",
-  "description": "",
+  "description": "The distributed, peer-to-peer, realtime, Firestore-like No-SQL database solution, based on IPFS and Orbit-DB",
   "version": "0.1.0",
   "main": "dist/index.js",
   "repository": {
@@ -22,9 +22,13 @@
     "@paper-db/kv-storage": "^2.0.2",
     "@paper-db/orbit-db": "^0.24.0",
     "ipfs": "^0.41.2",
-    "ipfs-http-client": "^42.0.0"
+    "ipfs-http-client": "^42.0.0",
+    "is-ipfs": "*",
+    "libp2p-crypto": "^0.17.5",
+    "p-map": "^4.0.0"
   },
   "devDependencies": {
+    "@types/bs58": "^4.0.1",
     "@types/fs-extra": "^8.1.0",
     "@types/jest": "^25.1.4",
     "@types/orbit-db": "git+https://github.com/PaperDB/orbit-db-types.git",

@@ -24,6 +24,11 @@ export class PaperDBDate extends Date {
     }
   }
 
+  toTimestamp (): PaperDBTimestamp {
+    // eslint-disable-next-line @typescript-eslint/no-use-before-define
+    return new PaperDBTimestamp(this.getTime())
+  }
+
   static fromTypedObj (obj: PaperDBDateObj | PaperDBDate | Date): PaperDBDate {
     if (obj instanceof Date) {
       return new PaperDBDate(obj)
@@ -34,5 +39,43 @@ export class PaperDBDate extends Date {
     }
 
     return new PaperDBDate(obj.iso8601)
+  }
+}
+
+export interface TimestampObj extends TypedObj<'timestamp'> {
+  /**
+   * milliseconds since the Unix epoch
+   */
+  ms: number;
+}
+
+@Conversion<TimestampObj>()
+export class PaperDBTimestamp {
+  static readonly $type = 'timestamp'
+  static readonly $v = 1
+
+  constructor (public readonly ms: number) {}
+
+  toTypedObj (): TimestampObj {
+    return {
+      $type: 'timestamp',
+      ms: this.ms,
+    }
+  }
+
+  toDate (): PaperDBDate {
+    return new PaperDBDate(this.ms)
+  }
+
+  static fromTypedObj (obj: TimestampObj | PaperDBTimestamp): PaperDBTimestamp {
+    if (obj instanceof PaperDBTimestamp) {
+      return obj
+    }
+
+    if (obj.$type !== 'timestamp' || typeof obj.ms === 'undefined' || isNaN(+obj.ms)) {
+      throw ERR_TYPED_OBJ_INVALID
+    }
+
+    return new PaperDBTimestamp(+obj.ms)
   }
 }

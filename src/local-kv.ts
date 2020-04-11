@@ -7,6 +7,7 @@ import path from 'path'
 import { KVStorage } from '@paper-db/kv-storage'
 import type { VALUE } from '@paper-db/kv-storage/src/interface'
 import { Options, DEFAULT_OPTIONS } from './options'
+import { PINLIST_KEY_PREFIX } from './constants'
 
 /**
  * the key of the record to indicate that the storage has been initialized
@@ -133,6 +134,7 @@ export class Namespace {
     const l = await this.storage.kvstorage.keys()
     return l.filter((k) => {
       if (k === INIT_KEY) return false // ignore the initialization record key
+      if (k.startsWith(PINLIST_KEY_PREFIX + NAMESPACE_SEP)) return false // ignore any pinlist
       return k.startsWith(this.namespaceKey)
     })
   }

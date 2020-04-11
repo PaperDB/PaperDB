@@ -1,5 +1,5 @@
 
-import { Converter } from './interface'
+import { ConversionI } from './interface'
 
 export const ERR_CONVERTER_UNMATCH = new TypeError('The TypedObj converter does not match the given type and version number')
 
@@ -7,7 +7,7 @@ export const ERR_CONVERTER_UNMATCH = new TypeError('The TypedObj converter does 
  * The registry for each version of a object type
  */
 interface VersionReg {
-  [$v: number]: Converter;
+  [$v: number]: ConversionI;
 }
 
 /**
@@ -25,7 +25,7 @@ export class ConverterRegistry {
    */
   private readonly typeReg = new Map<string, VersionReg>();
 
-  constructor (converters?: ReadonlyArray<Converter>) {
+  constructor (converters?: ReadonlyArray<ConversionI>) {
     if (!converters) {
       return
     }
@@ -39,11 +39,24 @@ export class ConverterRegistry {
   /**
    * get a TypedObj converter from the registry
    */
-  get (type: string, version?: number): Converter | undefined {
-    // the default version is `1` when parsing
-    version = version ?? 1
+  get (type: string, version?: number): ConversionI | undefined {
+    const verReg = this.typeReg.get(type)
+    // no type converter of this type exists
+    if (!verReg) {
+      return
+    }
 
-    const converter = this.typeReg.get(type)?.[version]
+    // if the `version` param is not given, return the first added version of the type converter in the Registry
+    if (!version) {
+      const converter: ConversionI = Object.values(verReg)[0]
+      if (converter.$type !== type) {
+        throw ERR_CONVERTER_UNMATCH
+      }
+      return converter
+    }
+
+    // if the `version` param is provided, only look for the type converter of the version
+    const converter = verReg[version]
     if (!converter) {
       return
     }
@@ -61,7 +74,7 @@ export class ConverterRegistry {
   /**
    * add a TypedObj converter to the registry
    */
-  add (converter: Converter): this {
+  add (converter: ConversionI): this {
     const $type = converter.$type
     const $v = converter.$v ?? 1 // the default version is `1`
 
