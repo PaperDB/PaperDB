@@ -20,8 +20,8 @@ const INIT_KEY = '__init__'
  */
 export const NAMESPACE_SEP = '\u001D'
 
-export function keyFor (path: ReadonlyArray<string>): string {
-  return path.join(NAMESPACE_SEP)
+export function keyFor (keyPath: ReadonlyArray<string>): string {
+  return keyPath.join(NAMESPACE_SEP)
 }
 
 export function pathOf (key: string): string[] {
