@@ -113,7 +113,7 @@ export class IPFSIdentityProvider extends IdentityProvider {
    */
   async signIdentity (data: string | Buffer): Promise<string> {
     if (!Buffer.isBuffer(data)) {
-      data = Buffer.from(data)
+      data = Buffer.from(data, 'hex')
     }
 
     const keyPair = await this._lookupKey()
