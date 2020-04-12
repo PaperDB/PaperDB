@@ -27,13 +27,16 @@ export const PINLIST_KEY_PREFIX = '__pinlist__'
  */
 export const IPFS_CONFIG = {
   'Addresses': {
+    'Swarm': [
+      '/ip4/0.0.0.0/tcp/0',
+      '/ip6/::/tcp/0',
+      '/ip4/127.0.0.1/tcp/0/ws',
+    ],
     'API': '/ip4/127.0.0.1/tcp/0',
-    'Swarm': ['/ip4/0.0.0.0/tcp/0'],
     'Gateway': '/ip4/127.0.0.1/tcp/0',
   },
-  'Bootstrap': [],
-  'Discovery': {
-    'MDNS': { 'Enabled': true, 'Interval': 1 },
-    'webRTCStar': { 'Enabled': false },
-  },
+  /**
+   * @todo add Bootstrap addresses, but do not overwrite the orginal addresses
+   */
+  // 'Bootstrap': [],
 }
