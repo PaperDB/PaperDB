@@ -2,28 +2,9 @@
 /**
  * ponyfill for globalThis  
  * https://v8.dev/features/globalthis  
- * https://mathiasbynens.be/notes/globalthis
  */
-// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-export const globalthis = (function () {
-  // eslint-disable-next-line no-undef
-  if (typeof globalThis === 'object') return globalThis
-
-  // eslint-disable-next-line no-extend-native
-  Object.defineProperty(Object.prototype, '__global__', {
-    get: function () {
-      return this
-    },
-    configurable: true,
-  })
-
-  // eslint-disable-next-line @typescript-eslint/ban-ts-ignore, @typescript-eslint/ban-ts-comment
-  // @ts-ignore
-  const gt = __global__ // eslint-disable-line no-undef
-  delete Object.prototype['__global__']
-
-  return gt
-}())
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+export const globalthis = require('ipfs-utils/src/globalthis')
 
 interface Env {
   isTest: boolean;
@@ -40,8 +21,7 @@ interface Env {
  * the environment that the program is running on
  */
 // eslint-disable-next-line @typescript-eslint/no-var-requires
-const env: Env = require('ipfs-utils/src/env')
-export { env }
+export const env: Env = require('ipfs-utils/src/env')
 
 /**
  * all valid data types in a json object 
