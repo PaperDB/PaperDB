@@ -25,6 +25,24 @@ export const globalthis = (function () {
   return gt
 }())
 
+interface Env {
+  isTest: boolean;
+  isElectron: boolean;
+  isElectronMain: boolean;
+  isElectronRenderer: boolean;
+  isNode: boolean;
+  isBrowser: boolean;
+  isWebWorker: boolean;
+  isEnvWithDom: boolean;
+}
+
+/**
+ * the environment that the program is running on
+ */
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const env: Env = require('ipfs-utils/src/env')
+export { env }
+
 /**
  * all valid data types in a json object 
  */
@@ -54,7 +72,7 @@ export interface CancelablePromise<T> extends Promise<T> {
  * `@staticImplements<StaticInterface>()
  * class A implements ClassInterface { }
  */
-export const staticImplements = <T>() => {
+export const staticImplements = <T> () => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/no-empty-function, @typescript-eslint/explicit-function-return-type
   return (constructor: T) => { }
 }

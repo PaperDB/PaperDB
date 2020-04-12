@@ -1,7 +1,7 @@
 
 import type IPFS from 'ipfs'
 import { DEFAULT_NAME, DEFAULT_IPFS_KEY_NAME } from './constants'
-import { CancelablePromise } from './utils'
+import { CancelablePromise, env } from './utils'
 
 type PickRequired<T, K extends keyof T> = {
   [P in K]-?: T[P];
@@ -56,5 +56,5 @@ export const DEFAULT_OPTIONS: PickRequired<Options, RequiredOptions> = Object.fr
   name: DEFAULT_NAME,
   ipfs: null,
   ipfsKeyName: DEFAULT_IPFS_KEY_NAME,
-  directory: typeof process !== 'undefined' ? `./.${DEFAULT_NAME}` : DEFAULT_NAME,
+  directory: env.isNode ? `./.${DEFAULT_NAME}` : DEFAULT_NAME,
 })
