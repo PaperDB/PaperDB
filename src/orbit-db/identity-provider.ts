@@ -30,6 +30,25 @@ const importPublicKey = (publicKeyBase64: string): crypto.PublicKey => {
   return crypto.keys.unmarshalPublicKey(buf)
 }
 
+const getPrivateKey = async (ipfs: IPFS, keyName: string): Promise<crypto.PrivateKey> => {
+  if (ipfs.key['protobuf']) {
+    // use the extra API Request method
+    // export the PrivateKey/keypair as a protobuf serialization, as in libp2p-crypto marshalPrivateKey
+    const keyData: ArrayBuffer = await ipfs.key['protobuf'](keyName)
+    return crypto.keys.unmarshalPrivateKey(Buffer.from(keyData))
+  }
+
+  // only for export/import pem
+  const pass = randomBytes(10).toString('hex')
+
+  // export pem string of the key from the IPFS keystore
+  const pem = await ipfs.key.export(keyName, pass)
+
+  // re-import the key from pem string to create an instance of RsaPrivateKey
+  const privateKey = await crypto.keys.import(pem, pass)
+  return privateKey
+}
+
 /**
  * identity.id (publicKey) -> Qm....
  */
@@ -72,14 +91,7 @@ export class IPFSIdentityProvider extends IdentityProvider {
     try {
       const keyName = this._keyName
 
-      // only for export/import pem
-      const pass = randomBytes(10).toString('hex')
-
-      // export pem string of the key from the IPFS keystore
-      const pem = await this._ipfs.key.export(keyName, pass)
-
-      // re-import the key from pem string to create an instance of RsaPrivateKey
-      const privateKey = await crypto.keys.import(pem, pass)
+      const privateKey = await getPrivateKey(this._ipfs, keyName)
       const publicKey = privateKey.public
 
       const keyPair = {
