@@ -1,7 +1,7 @@
 
 import IPFS from 'ipfs'
 import CID from 'cids'
-import { path as isIPFSPath, cid as isIPFSCid } from 'is-ipfs'
+import { path as isIPFSPath, cid as isIPFSCid, cidPath as isIPFSCidPath } from 'is-ipfs'
 import configure from 'ipfs-http-client/src/lib/configure'
 import { randomBytes } from 'libp2p-crypto'
 
@@ -108,7 +108,7 @@ export const createIPFSInstance = async (options?: Options): Promise<IPFS> => {
 export const stringifyIPFSPath = (ipfsPath: string | CID): string => {
   if (CID.isCID(ipfsPath)) {
     return (ipfsPath as CID).toString()
-  } else if (isIPFSPath(ipfsPath) || isIPFSCid(ipfsPath)) {
+  } else if (isIPFSPath(ipfsPath) || isIPFSCid(ipfsPath) || isIPFSCidPath(ipfsPath)) {
     return ipfsPath as string
   } else {
     throw new TypeError('The `ipfsPath` provided is invalid.')
