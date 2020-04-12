@@ -24,14 +24,36 @@ export interface KeyPair {
 }
 
 /**
+ * If the key pair corresponding to the ipfsKeyName can't be found, will create one.
+ * the `pass` property in `IPFS.create({ pass })` is required in order to have a valid IPFS keystore
+ */
+export const ensureIPFSKey = async (ipfs: IPFS, keyName: string): Promise<void> => {
+  const keys: { name: string; id: string }[] = await ipfs.key.list()
+  const found = keys.some(({ name }) => {
+    return name === keyName
+  })
+
+  if (!found) {
+    // create a new key corresponding to the name
+    await ipfs.key.gen(keyName, {
+      type: 'rsa',
+      size: 2048,
+    })
+  }
+}
+
+/**
  * @param publicKeyBase64 identity.id
  */
-const importPublicKey = (publicKeyBase64: string): crypto.PublicKey => {
+export const importPublicKey = (publicKeyBase64: string): crypto.PublicKey => {
   const buf = Buffer.from(publicKeyBase64, 'base64')
   return crypto.keys.unmarshalPublicKey(buf)
 }
 
-const getPrivateKey = async (ipfs: IPFS, keyName: string): Promise<crypto.PrivateKey> => {
+export const getPrivateKey = async (ipfs: IPFS, keyName: string): Promise<crypto.PrivateKey> => {
+  // If the key pair corresponding to the key name can't be found, will create one.
+  await ensureIPFSKey(ipfs, keyName)
+
   if (ipfs.key['protobuf']) {
     // use the unofficial `ipfs.key.protobuf` method
     // export the PrivateKey/keypair as a protobuf serialization, as in libp2p-crypto marshalPrivateKey
@@ -58,6 +80,8 @@ export const getKeyHash = async (publicKeyBase64: string): Promise<string> => {
   const hash = await publicKey.hash()
   return bs58.encode(hash)
 }
+
+export const ERR_IDENTITY_JSON_INVALID = new Error('The identity json provided is invalid.')
 
 /**
  * sign/verify OrbitDB Identity using the keys that sign IPNS records
@@ -89,23 +113,18 @@ export class IPFSIdentityProvider extends IdentityProvider {
       return this._keyPair
     }
 
-    try {
-      const keyName = this._keyName
+    const keyName = this._keyName
 
-      const privateKey = await getPrivateKey(this._ipfs, keyName)
-      const publicKey = privateKey.public
+    const privateKey = await getPrivateKey(this._ipfs, keyName)
+    const publicKey = privateKey.public
 
-      const keyPair = {
-        private: privateKey,
-        public: publicKey,
-      }
-      this._keyPair = keyPair
-
-      return keyPair
-    } catch (err) {
-      err.code = 'ERR_CANNOT_GET_KEY'
-      throw err
+    const keyPair = {
+      private: privateKey,
+      public: publicKey,
     }
+    this._keyPair = keyPair
+
+    return keyPair
   }
 
   /**
@@ -138,9 +157,14 @@ export class IPFSIdentityProvider extends IdentityProvider {
    * verify whether the OrbitDB key/identity (`identity.publicKey` + `identity.signatures.id`) is signed (`identity.signatures.publicKey`) by the IPFS/IPNS key corresponding to the publicKey offered (`identity.id`)
    */
   static async verifyIdentity (identity: IdentityAsJson): Promise<boolean> {
+    if (!identity || !identity.id || !identity.publicKey || !identity.signatures?.id || !identity.signatures?.publicKey) {
+      throw ERR_IDENTITY_JSON_INVALID
+    }
+
     const key = importPublicKey(identity.id)
     const data = Buffer.from(identity.publicKey + identity.signatures.id, 'hex')
     const signature = Buffer.from(identity.signatures.publicKey, 'base64')
+
     // Verify that identity was signed by the Key
     return key.verify(data, signature)
   }

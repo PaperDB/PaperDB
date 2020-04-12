@@ -9,7 +9,7 @@ import { Options, DEFAULT_OPTIONS } from '../options'
 
 import LogStore from './logstore'
 import PaperDBAC, { ACCallback } from './access-controller'
-import IPFSIdentityProvider from './identity-provider'
+import IPFSIdentityProvider, { ensureIPFSKey } from './identity-provider'
 
 OrbitDB.addDatabaseType(LogStore.type, LogStore)
 AccessControllers.addAccessController({ AccessController: PaperDBAC })
@@ -35,25 +35,6 @@ interface StoreOptions<T = any, MetaData = any> {
    *       so the entries must be backward compatible.
    */
   acCallback?: ACCallback<T>;
-}
-
-/**
- * If the key pair corresponding to the ipfsKeyName can't be found, will create one.
- * the `pass` property in `IPFS.create({ pass })` is required in order to have a valid IPFS keystore
- */
-export const ensureIPFSKey = async (ipfs: IPFS, keyName: string): Promise<void> => {
-  const keys: { name: string; id: string }[] = await ipfs.key.list()
-  const found = keys.some(({ name }) => {
-    return name === keyName
-  })
-
-  if (!found) {
-    // create a new key corresponding to the name
-    await ipfs.key.gen(keyName, {
-      type: 'rsa',
-      size: 2048,
-    })
-  }
 }
 
 export class PaperOrbitDB {
