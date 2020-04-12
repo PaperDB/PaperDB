@@ -15,6 +15,10 @@ export const createValidator = <OBJ extends TypedObj<any> = any> (typeConverter:
   }
 
   return async (obj: OBJ): Promise<boolean /** obj is OBJ */> => {
+    if (typeof obj === 'undefined' || obj === null) { // if obj is null or undefined
+      return false
+    }
+
     // if `isValidTypedObj` exists
     if (typeof typeConverter.isValidTypedObj === 'function') {
       return typeConverter.isValidTypedObj(obj, paperdb)

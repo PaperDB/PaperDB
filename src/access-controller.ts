@@ -22,7 +22,8 @@ export interface PaperDBAccessController<DocType extends ConversionI = Conversio
 export const ACConstDocType: PaperDBAccessController = (collection, paperdb) => {
   const typeValidator = createValidator(collection['docConverter'], paperdb)
 
-  return (entry): Promise<boolean> => {
+  return async (entry): Promise<boolean> => {
+    if (!entry) { return false }
     return typeValidator(entry.payload)
   }
 }
@@ -36,6 +37,10 @@ export const ACConstUser: PaperDBAccessController = (collection, paperdb) => {
   let userId: string
 
   return async (entry): Promise<boolean> => {
+    if (!entry) {
+      return false
+    }
+
     const docRef = new Document(entry, collection['docConverter'], paperdb)
     const currentUserId = await docRef.userId()
 
