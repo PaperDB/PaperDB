@@ -21,18 +21,18 @@ export class ConverterTest1V1 {
   readonly abc = '123'
 
   async toTypedObj (): Promise<Test1ObjV1> {
-    return {
+    return Promise.resolve({
       $type: 'test1',
       abc: this.abc,
-    }
+    })
   }
 
   static async fromTypedObj (obj: Test1ObjV1): Promise<ConverterTest1V1> {
-    if (obj.$type !== 'test1' || (obj.$v && obj.$v !== 1) || obj.abc !== '123') {
+    if (obj.$type !== 'test1' || (obj?.$v !== 1) || obj.abc !== '123') {
       throw ERR_TYPED_OBJ_INVALID
     }
 
-    return new ConverterTest1V1()
+    return Promise.resolve(new ConverterTest1V1())
   }
 }
 
@@ -44,11 +44,11 @@ export class ConverterTest1V2 {
   readonly def = '456'
 
   async toTypedObj (): Promise<Test1ObjV2> {
-    return {
+    return Promise.resolve({
       $type: 'test1',
       $v: 2,
       def: this.def,
-    }
+    })
   }
 
   static async fromTypedObj (obj: Test1ObjV2): Promise<ConverterTest1V2> {
@@ -56,7 +56,7 @@ export class ConverterTest1V2 {
       throw ERR_TYPED_OBJ_INVALID
     }
 
-    return new ConverterTest1V2()
+    return Promise.resolve(new ConverterTest1V2())
   }
 }
 
@@ -65,7 +65,7 @@ export class ConverterNested {
   static readonly $type = 'nested'
   static readonly $v = 0
 
-  constructor (public test1: ConverterTest1V2) {}
+  constructor (public test1: ConverterTest1V2) { }
 
   async toTypedObj (): Promise<NestedObj> {
     return {
