@@ -41,8 +41,7 @@ describe('LocalKVStorage', () => {
     })
 
     test('should throw error when name is invalid', () => {
-      // eslint-disable-next-line @typescript-eslint/no-floating-promises
-      expect(LocalKVStorage.create({ name: '  测试' })).rejects.toThrowError()
+      return expect(LocalKVStorage.create({ name: '  测试' })).rejects.toThrowError()
     })
   })
 
@@ -195,8 +194,7 @@ describe('LocalKVStorage', () => {
       expect(storage['closed']).toBe(false)
       await storage.close()
       expect(storage['closed']).toBe(true)
-      // eslint-disable-next-line @typescript-eslint/no-floating-promises
-      expect(storage.root.records()).rejects.toBe(STORAGE_CLOSED_ERR)
+      await expect(storage.root.records()).rejects.toBe(STORAGE_CLOSED_ERR)
     })
   })
 

@@ -44,8 +44,7 @@ describe('IPFS Utils', () => {
 
     describe('receive something else', () => {
       test('the `ipfs` option is a plain object', () => {
-        // eslint-disable-next-line @typescript-eslint/no-floating-promises
-        expect(createIPFSInstance({ ipfs: {} as any, directory: dir0 })).rejects.toThrowError()
+        return expect(createIPFSInstance({ ipfs: {} as any, directory: dir0 })).rejects.toThrowError()
       })
     })
 
