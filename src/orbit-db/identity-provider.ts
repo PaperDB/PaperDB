@@ -157,7 +157,7 @@ export class IPFSIdentityProvider extends IdentityProvider {
    * verify whether the OrbitDB key/identity (`identity.publicKey` + `identity.signatures.id`) is signed (`identity.signatures.publicKey`) by the IPFS/IPNS key corresponding to the publicKey offered (`identity.id`)
    */
   static async verifyIdentity (identity: IdentityAsJson): Promise<boolean> {
-    if (!identity || !identity.id || !identity.publicKey || !identity.signatures?.id || !identity.signatures?.publicKey) {
+    if (!identity || !identity.id || !identity.publicKey || !identity.signatures || !identity.signatures.id || !identity.signatures.publicKey) {
       throw ERR_IDENTITY_JSON_INVALID
     }
 
