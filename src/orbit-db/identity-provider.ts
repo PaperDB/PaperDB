@@ -118,7 +118,7 @@ export class IPFSIdentityProvider extends IdentityProvider {
 
     const keyPair = await this._lookupKey()
     const signedBuf = await keyPair.private.sign(data)
-    return signedBuf.toString('hex')
+    return signedBuf.toString('base64')
   }
 
   /**
@@ -127,7 +127,7 @@ export class IPFSIdentityProvider extends IdentityProvider {
   static async verifyIdentity (identity: IdentityAsJson): Promise<boolean> {
     const key = importPublicKey(identity.id)
     const data = Buffer.from(identity.publicKey + identity.signatures.id, 'hex')
-    const signature = Buffer.from(identity.signatures.publicKey, 'hex')
+    const signature = Buffer.from(identity.signatures.publicKey, 'base64')
     // Verify that identity was signed by the Key
     return key.verify(data, signature)
   }
