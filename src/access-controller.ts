@@ -37,7 +37,7 @@ export const ACConstUser: PaperDBAccessController = (collection, paperdb) => {
   let userId: string
 
   return async (entry): Promise<boolean> => {
-    if (!entry) {
+    if (!entry || !entry.identity) {
       return false
     }
 
@@ -46,7 +46,7 @@ export const ACConstUser: PaperDBAccessController = (collection, paperdb) => {
 
     // if the constant user is not stored
     if (!userId) {
-      if (collection['preloadEntry']) { // if the preload document exists, use the creator of the preload document
+      if (collection['preloadEntry']?.identity) { // if the preload document exists, use the creator of the preload document
         const preloadDocRef = new Document(collection['preloadEntry'], collection['docConverter'], paperdb)
         userId = await preloadDocRef.userId()
       } else { // otherwise, use the first document provided
