@@ -24,7 +24,8 @@ export interface Options {
    * - An IPFS or ipfs-http-client instance,  
    *   must enable `pubsub`, 
    *   and implement the [`key.export` API method](https://github.com/ipfs/js-ipfs/blob/master/docs/core-api/KEY.md#keyexport), which is not in go-ipfs,  
-   *   so using js-ipfs or a custom go-ipfs is required
+   *   so using js-ipfs or a custom go-ipfs is required.  
+   *   Alternatively, implement the unofficial `ipfs.key.protobuf` method
    */
   ipfs?: null | IPFS;
 

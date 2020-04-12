@@ -1,6 +1,7 @@
 
 import { IdentityProvider, IdentityProviderOptions, IdentityAsJson } from 'orbit-db-identity-provider'
 import IPFS from 'ipfs'
+import { UnofficialKeyProtobufMethod } from '../ipfs'
 
 import crypto, { randomBytes } from 'libp2p-crypto'
 import bs58 from 'bs58'
@@ -32,10 +33,10 @@ const importPublicKey = (publicKeyBase64: string): crypto.PublicKey => {
 
 const getPrivateKey = async (ipfs: IPFS, keyName: string): Promise<crypto.PrivateKey> => {
   if (ipfs.key['protobuf']) {
-    // use the extra API Request method
+    // use the unofficial `ipfs.key.protobuf` method
     // export the PrivateKey/keypair as a protobuf serialization, as in libp2p-crypto marshalPrivateKey
-    const keyData: ArrayBuffer = await ipfs.key['protobuf'](keyName)
-    return crypto.keys.unmarshalPrivateKey(Buffer.from(keyData))
+    const keyData = await (ipfs.key['protobuf'] as UnofficialKeyProtobufMethod)(keyName)
+    return crypto.keys.unmarshalPrivateKey(keyData)
   }
 
   // only for export/import pem
