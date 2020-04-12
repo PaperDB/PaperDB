@@ -18,8 +18,8 @@ export interface Options extends IdentityProviderOptions {
 }
 
 export interface KeyPair {
-  private: crypto.keys.supportedKeys.rsa.RsaPrivateKey;
-  public: crypto.keys.supportedKeys.rsa.RsaPublicKey;
+  private: crypto.PrivateKey;
+  public: crypto.PublicKey;
 }
 
 /**
@@ -102,7 +102,7 @@ export class IPFSIdentityProvider extends IdentityProvider {
   async getId (): Promise<string> {
     const keyPair = await this._lookupKey()
     const publicKey = keyPair.public
-    return crypto.keys.marshalPublicKey(publicKey, 'rsa').toString('base64')
+    return crypto.keys.marshalPublicKey(publicKey).toString('base64')
   }
 
   /**
