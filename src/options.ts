@@ -21,7 +21,10 @@ export interface Options {
    * 
    * the value could be:   
    * - `null` (default): use the global `ipfs` object, or create a new instance of js-ipfs    
-   * - an IPFS or ipfs-http-client instance, Must enable `pubsub` and key management
+   * - An IPFS or ipfs-http-client instance,  
+   *   must enable `pubsub`, 
+   *   and implement the [`key.export` API method](https://github.com/ipfs/js-ipfs/blob/master/docs/core-api/KEY.md#keyexport), which is not in go-ipfs,  
+   *   so using js-ipfs or a custom go-ipfs is required
    */
   ipfs?: null | IPFS;
 
