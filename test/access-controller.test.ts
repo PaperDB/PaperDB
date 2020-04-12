@@ -1,17 +1,12 @@
 
-import type { PaperDB } from '../src'
 import { ACConstDocType, ACConstUser, createACCallback, DEFAULT_AC } from '../src/access-controller'
 import type { Collection } from '../src/types/collection'
 import { ConverterTest1V1, ConverterTest1V2 } from './types/mock'
+import { mockPaperdb, IdA, IdB } from './mock'
 
 const mockCollection0 = {
   docConverter: ConverterTest1V2,
 } as any as Collection
-
-const mockPaperdb = {} as any as PaperDB
-
-const IdA = 'CAASpgIwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQCw/+sm2+EnnxH1oxJV5IdZG8h2UK1yUi3azZxunh0tfzHHUeVo4JTSj80sIMvnOr3eD73t293VpROPhZqsZLXTbfo2t3jqhllx77ew0YiWQw5WpW1zv9WR+uNu9aAsKCVsGijra8vyRI5b1V+oZPlrh7rN7SWhcjZxjsukX/TupsoO+M7nMhuMmDB9lP7MtXeCNbtjwh1MU00QuKzwUfw7Q2cV1qt6FoCHTjV0RFxkdbDCHnnl8D4sA24KiDTDtn+viQd0DF5vqMhYGM/ulYQDEOWJ1Qb+gB3RYiyiDS6L2N0PGEYv6yxXvW8w/U5NlKbcLhQYbNm8zUvo49WbEWtpAgMBAAE='
-const IdB = 'CAASpgIwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQDJQNGIMJFSVV7tb23nhDHSKVgpSsHWW2OWPPf6u0F0HIPQeVpb8GEVtHAnrVZei1XgTWM1LL3GS3yKRoJ5vpuyKXGmqLwTJYobxJITOi507GFhNTv4+UJYb9DxAKVp8HsRq/VQ3lNr8TDldN3UhrxUOmCo3wWYes33qoTkKTGKBQOvWFbChPrflEr3DrOzrrg2Ai/HvBtlmPbuwOnUJSXIZjsnf5e20LzppKJK5vj+YAoClspmnUWRT1imWnDnO/u2YFcW4l8aVtx09wwYO/18Whd6FGijJkdK+VgTIQ2J1wrG5ly4EPNQt/4ZrbWBFZs1GG8KzDyHLJofyys8TAcxAgMBAAE='
 
 describe('PaperDB Access Controllers', () => {
   let mockEntries: OrbitDBEntryLog<any>[]
