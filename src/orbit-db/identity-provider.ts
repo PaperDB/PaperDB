@@ -23,18 +23,18 @@ export interface KeyPair {
 }
 
 /**
- * @param publicKeyHex identity.id
+ * @param publicKeyBase64 identity.id
  */
-const importPublicKey = (publicKeyHex: string): crypto.PublicKey => {
-  const buf = Buffer.from(publicKeyHex, 'hex')
+const importPublicKey = (publicKeyBase64: string): crypto.PublicKey => {
+  const buf = Buffer.from(publicKeyBase64, 'base64')
   return crypto.keys.unmarshalPublicKey(buf)
 }
 
 /**
  * identity.id (publicKey) -> Qm....
  */
-export const getKeyHash = async (publicKeyHex: string): Promise<string> => {
-  const publicKey = importPublicKey(publicKeyHex)
+export const getKeyHash = async (publicKeyBase64: string): Promise<string> => {
+  const publicKey = importPublicKey(publicKeyBase64)
   const hash = await publicKey.hash()
   return bs58.encode(hash)
 }
@@ -96,13 +96,13 @@ export class IPFSIdentityProvider extends IdentityProvider {
   }
 
   /**
-   * publicKey (in hex format) of the key pair from the IPFS keystore
+   * publicKey (encoded in base64) of the key pair from the IPFS keystore
    * @returns identity.id
    */
   async getId (): Promise<string> {
     const keyPair = await this._lookupKey()
     const publicKey = keyPair.public
-    return crypto.keys.marshalPublicKey(publicKey, 'rsa').toString('hex')
+    return crypto.keys.marshalPublicKey(publicKey, 'rsa').toString('base64')
   }
 
   /**
