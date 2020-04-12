@@ -11,10 +11,6 @@ import { globalthis } from './utils'
  * test if `ipfs` implements interface-js-ipfs-core
  */
 export const isIPFSInstance = async (ipfs: IPFS | any): Promise<boolean> => {
-  if (ipfs instanceof IPFS) {
-    return true
-  }
-
   // `ipfs` implements the IPFS APIs (interface-js-ipfs-core)
   try {
     const { version } = await ipfs.version()
