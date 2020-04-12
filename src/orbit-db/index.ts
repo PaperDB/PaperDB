@@ -109,7 +109,7 @@ export class PaperOrbitDB {
       type: LogStore.type,
       accessController: {
         type: PaperDBAC.type,
-        callback: (options && options.acCallback) || undefined,
+        callback: (options?.acCallback) || undefined,
       },
     }, options || {})
 

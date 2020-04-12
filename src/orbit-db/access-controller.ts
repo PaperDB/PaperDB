@@ -51,7 +51,7 @@ export class PaperDBAC<EntryPayloadType> extends AccessController {
 
   // eslint-disable-next-line @typescript-eslint/require-await
   static async create<T> (orbitdb: OrbitDB, acOptions?: ACOptions<T>) {
-    const callback = acOptions && acOptions.callback
+    const callback = acOptions?.callback
     return new PaperDBAC(callback)
   }
 }
