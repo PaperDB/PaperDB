@@ -1,5 +1,6 @@
 
 import { LocalKVStorage, Namespace, Record, STORAGE_CLOSED_ERR, NAMESPACE_SEP } from '../src/local-kv'
+import { PINLIST_KEY_PREFIX } from '../src/constants'
 import { rmrf } from './utils'
 import path from 'path'
 import fs from 'fs-extra'
@@ -23,7 +24,7 @@ describe('LocalKVStorage', () => {
 
   beforeAll(async () => {
     await rmrf(defaultPath)
-    await rmrf(dbStoragePath)
+    await rmrf(dbPath)
   })
 
   describe('create', () => {
@@ -39,7 +40,8 @@ describe('LocalKVStorage', () => {
       expect(storage['kvstorage']['_db']._config.name).toBe('test')
     })
 
-    test('should throw error when name is invalid', async () => {
+    test('should throw error when name is invalid', () => {
+      // eslint-disable-next-line @typescript-eslint/no-floating-promises
       expect(LocalKVStorage.create({ name: '  测试' })).rejects.toThrowError()
     })
   })
@@ -158,17 +160,34 @@ describe('LocalKVStorage', () => {
       expect(keys).toStrictEqual([R_KEY1, R_KEY])
     })
 
+    test(`ignore keys prefixed with '${PINLIST_KEY_PREFIX}' (used in PaperDB IPFS Pinlist)`, async () => {
+      const r = rootNamespace.namespace(PINLIST_KEY_PREFIX)
+        .namespace('default') // the pinlist name
+        .record('Qmhash')
+      await r.set(null)
+
+      expect(await r.get()).toBe(null)
+      expect(await r.get()).not.toBe(undefined)
+      expect(r.key).toBe(`${PINLIST_KEY_PREFIX}${NAMESPACE_SEP}default${NAMESPACE_SEP}Qmhash`)
+
+      // does not include the pinlist key previously added
+      const keys = await rootNamespace.keys()
+      expect(keys).toStrictEqual([R_KEY1, R_KEY])
+    })
+
     test('has all previously added records', async () => {
       const rs = await rootNamespace.records()
       expect(rs.map(r => r.path)).toStrictEqual([R_PATH1, R_PATH])
     })
   })
 
-  test('access a record by key', async () => {
-    const r = storage.recordOf(R_KEY)
-    expect(r.path).toStrictEqual(R_PATH)
-    expect(await r.exist()).toBe(true)
-    expect(await r.get()).toStrictEqual(R_VALUE)
+  describe('access a record by key', () => {
+    test('', async () => {
+      const r = storage.recordOf(R_KEY)
+      expect(r.path).toStrictEqual(R_PATH)
+      expect(await r.exist()).toBe(true)
+      expect(await r.get()).toStrictEqual(R_VALUE)
+    })
   })
 
   describe('close', () => {
@@ -176,7 +195,13 @@ describe('LocalKVStorage', () => {
       expect(storage['closed']).toBe(false)
       await storage.close()
       expect(storage['closed']).toBe(true)
+      // eslint-disable-next-line @typescript-eslint/no-floating-promises
       expect(storage.root.records()).rejects.toBe(STORAGE_CLOSED_ERR)
     })
+  })
+
+  afterAll(async () => {
+    await rmrf(defaultPath)
+    await rmrf(dbPath)
   })
 })
