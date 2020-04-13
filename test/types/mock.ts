@@ -9,7 +9,7 @@ interface Test1ObjV2 extends TypedObj<'test1', 2> {
   def: string;
 }
 
-interface NestedObj extends TypedObj<'nested', 0> {
+export interface NestedObj extends TypedObj<'nested', 0> {
   test1: Test1ObjV2;
 }
 

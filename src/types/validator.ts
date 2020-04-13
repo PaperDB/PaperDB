@@ -1,5 +1,5 @@
 
-import { TypedObj, Converter, isValidTypeConverter } from './converter'
+import { Converter, isValidTypeConverter, TypedObjFrom } from './converter'
 import type { PaperDB } from '../index'
 
 /**
@@ -8,13 +8,13 @@ import type { PaperDB } from '../index'
  * @param paperdb the root PaperDB instance
  */
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-export const createValidator = <OBJ extends TypedObj<any> = any> (typeConverter: Converter<OBJ>, paperdb: PaperDB) => {
+export const createValidator = <C extends Converter<any>> (typeConverter: C, paperdb: PaperDB) => {
   // assert the `typeConverter` is a valid type converter
   if (!isValidTypeConverter(typeConverter)) {
     throw new TypeError('The type converter is invalid.')
   }
 
-  return async (obj: OBJ): Promise<boolean /** obj is OBJ */> => {
+  return async (obj: TypedObjFrom<C>): Promise<boolean /** obj is OBJ */> => {
     if (typeof obj === 'undefined' || obj === null) { // if obj is null or undefined
       return false
     }
