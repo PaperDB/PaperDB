@@ -30,7 +30,9 @@ export class PaperDBDate extends Date {
   }
 
   static fromTypedObj (obj: PaperDBDateObj | PaperDBDate | Date): PaperDBDate {
-    if (obj instanceof Date) {
+    if (obj instanceof PaperDBDate) {
+      return obj
+    } else if (obj instanceof Date) {
       return new PaperDBDate(obj)
     }
 
@@ -54,7 +56,7 @@ export class PaperDBTimestamp {
   static readonly $type = 'timestamp'
   static readonly $v = 1
 
-  constructor (public readonly ms: number) {}
+  constructor (public readonly ms: number) { }
 
   toTypedObj (): TimestampObj {
     return {
@@ -72,7 +74,7 @@ export class PaperDBTimestamp {
       return obj
     }
 
-    if (obj.$type !== 'timestamp' || typeof obj.ms === 'undefined' || isNaN(+obj.ms)) {
+    if (obj.$type !== 'timestamp' || typeof obj.ms === 'undefined' || obj.ms === null || isNaN(+obj.ms) || !isFinite(+obj.ms)) {
       throw ERR_TYPED_OBJ_INVALID
     }
 
