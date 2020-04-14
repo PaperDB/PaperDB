@@ -41,7 +41,7 @@ export const filesAPIFactory = (paperdb: PaperDB) => {
     ]
 
     // if the alternative method to `ipfs.cat` exists,  
-    // racing it with  `ipfs.cat`
+    // racing it with `ipfs.cat`
     if (ipfsAltCat) {
       promises.push(
         ...ipfsAltCat.map(fn => fn(ref, { length: size }))
@@ -53,6 +53,13 @@ export const filesAPIFactory = (paperdb: PaperDB) => {
     // promises may be cancelable 
     // cancel all unresolved promises
     promises.map(p => p.cancel?.())
+
+    // add the data back to IPFS
+    // in case that the data is fetched from the alternative `ipfs.cat` method, or
+    // solve the possible bug that an object cannot be fetched multiple times from a single remote peer (possibly caused by the single wantlist)
+    for await (const _ of paperdb.ipfs.add(buf, { pin: true })) {
+      void (_) // do nothing
+    }
 
     return buf
   }

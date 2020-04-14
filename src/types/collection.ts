@@ -218,7 +218,7 @@ export class Collection<DocType extends ConversionI = any> {
   /**
    * load the actual OrbitDB logstore from the reference
    */
-  private async ready (): Promise<void> {
+  async ready (): Promise<void> {
     if (this.logstore) {
       return
     }
@@ -315,6 +315,8 @@ export class Collection<DocType extends ConversionI = any> {
    * @returns a Document reference instance of the document added
    */
   async add (doc: Promisable<InstanceType<DocType> | Document<DocType>>, pin = true): Promise<Document<DocType>> {
+    await this.ready()
+
     doc = await doc
 
     // the `doc` param is a Document reference instance
@@ -355,8 +357,11 @@ export class Collection<DocType extends ConversionI = any> {
   }
 
   /**
-   * Subscribe the event which is emitted when the collection has synced with another peer.   
+   * Subscribe the event which is emitted when the collection has synced with another peer.  
+   * (inbound replication only, will not be emitted when adding documents by `collection.add`)
+   * 
    * This is usually a good place to re-query the collection for updated results
+   * 
    * @see https://github.com/orbitdb/orbit-db/blob/master/API.md#replicated
    */
   async onSnapshot (cb: () => void): Promise<UnsubFn> {

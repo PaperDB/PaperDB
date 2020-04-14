@@ -97,7 +97,7 @@ export const collectionAPIFactory = (paperdb: PaperDB) => {
         metainfo: options.metainfo,
         preload: preloadEntry,
       } as DatastoreMetadata,
-      () => true // use a placeholder orbit-db access controller
+      // use the default placeholder orbit-db access controller callback
     )
     const collectionId = toCollectionId(_store.address.toString())
     await _store.close() // close the temporary datastore
