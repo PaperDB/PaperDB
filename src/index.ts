@@ -1,4 +1,14 @@
 
+/*!
+ * PaperDB
+ * 
+ * The distributed, peer-to-peer, Firestore-like No-SQL database solution, based on IPFS and Orbit-DB
+ * 
+ * @author   make1.app <https://github.com/make1app>, Xmader <https://github.com/Xmader>
+ * @license  GPL 3.0 or later
+ * @see      https://github.com/PaperDB/PaperDB/
+ */
+
 import { Options, DEFAULT_OPTIONS } from './options'
 import { TYPE_REGISTRY } from './types'
 import { createIPFSInstance } from './ipfs'

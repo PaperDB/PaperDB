@@ -1,6 +1,6 @@
 {
   "name": "@paper-db/paper-db",
-  "description": "The distributed, peer-to-peer, realtime, Firestore-like No-SQL database solution, based on IPFS and Orbit-DB",
+  "description": "The distributed, peer-to-peer, Firestore-like No-SQL database solution, based on IPFS and Orbit-DB",
   "version": "0.1.0",
   "main": "dist/index.js",
   "repository": {
@@ -55,6 +55,6 @@
     "build": "tsc -p src",
     "watch": "npm run build -- --watch",
     "clean": "rimraf dist",
-    "test": "jest --coverage --forceExit"
+    "test": "jest --coverage"
   }
 }
