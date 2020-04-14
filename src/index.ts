@@ -16,6 +16,7 @@ import { PaperOrbitDB } from './orbit-db'
 import { LocalKVStorage } from './local-kv'
 import { collectionAPIFactory } from './collections'
 import { filesAPIFactory } from './files'
+import { getKeyHash } from './orbit-db/identity-provider'
 
 import type IPFS from 'ipfs'
 
@@ -98,6 +99,14 @@ export class PaperDB {
    * Main API - IPFS/IPNS
    */
   readonly files = filesAPIFactory(this)
+
+  /**
+   * get the self PaperDB User Id  
+   * base58-btc encoded multihash (Qm....) of the IPFS public key being used (`options.ipfsKeyName`)
+   */
+  userId (): Promise<string> {
+    return getKeyHash(this._db.identity.id)
+  }
 }
 
 export default PaperDB
