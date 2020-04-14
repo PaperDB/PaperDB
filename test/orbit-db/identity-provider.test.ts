@@ -16,6 +16,9 @@ const identityStorePath1 = path.join(dir, '/keystore1')
 
 const mockIdentitySig = '4q0snOL+IdwsfGW6r8WBdIh7dFe8FGahU3LjVpZ2VvgWsm+qcTKbz2T04wUfbSq+jaB2rQvPQ8szKReRCRhCBA=='
 
+// set the default timeout: 20s
+jest.setTimeout(20 * 1000)
+
 // register the IdentityProvider type
 Identities.addIdentityProvider(IPFSIdentityProvider)
 
