@@ -4,7 +4,6 @@ import OrbitDB from '@paper-db/orbit-db'
 import Identities, { Identity } from 'orbit-db-identity-provider'
 import AccessControllers from 'orbit-db-access-controllers'
 import path from 'path'
-import fs from 'fs-extra'
 
 import { Options, DEFAULT_OPTIONS } from '../options'
 
@@ -50,7 +49,6 @@ export class PaperOrbitDB {
   static async createInstance (ipfs: IPFS, options: Options): Promise<PaperOrbitDB> {
     const dir = options?.directory ?? DEFAULT_OPTIONS.directory
     const orbitDir = path.join(dir, 'orbit')
-    await fs.ensureDir(orbitDir)
 
     const ipfsKeyName = typeof options.ipfsKeyName === 'string' ? options.ipfsKeyName : DEFAULT_OPTIONS.ipfsKeyName
 
@@ -63,14 +61,11 @@ export class PaperOrbitDB {
     // If the key pair corresponding to the ipfsKeyName can't be found, will create one.
     await ensureIPFSKey(ipfs, ipfsKeyName)
 
-    const identityKeyStorePath = path.join(orbitDir, '/keystore')
-    await fs.ensureDir(identityKeyStorePath)
-
     orbitdbOptions.identity = await Identities.createIdentity({
       ipfs,
       type: IPFSIdentityProvider.type,
       key: ipfsKeyName,
-      identityKeysPath: identityKeyStorePath,
+      identityKeysPath: path.join(orbitDir, '/keystore'),
     })
 
     const instance = new this()

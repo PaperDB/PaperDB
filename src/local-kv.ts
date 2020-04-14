@@ -3,7 +3,6 @@
  */
 
 import path from 'path'
-import fs from 'fs-extra'
 
 import { KVStorage } from '@paper-db/kv-storage'
 import type { VALUE } from '@paper-db/kv-storage/src/interface'
@@ -206,7 +205,6 @@ export class LocalKVStorage {
     }
 
     const storagePath = path.join(directory, 'kvstorage')
-    await fs.ensureDir(storagePath)
 
     const kvstorage = new KVStorage({
       name,
