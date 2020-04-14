@@ -83,7 +83,7 @@ export const Conversion = <OBJ extends TypedObj<any, any>> () => {
  * the basic interface for common PaperDB Type converters  (class designed for TypedObj conversion)
  */
 export interface ConversionI<OBJ extends TypedObj<any, any> = TypedObj<any, any>> extends Converter<OBJ> {
-  new(): Convertible<OBJ>;
+  new(...args: any[]): Convertible<OBJ>;
 }
 
 /**
