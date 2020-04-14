@@ -19,7 +19,7 @@
     ".eslintrc"
   ],
   "dependencies": {
-    "@paper-db/kv-storage": "^2.0.2",
+    "@paper-db/kv-storage": "^2.0.3",
     "@paper-db/orbit-db": "^0.24.0",
     "fs-extra": "^8.1.0",
     "ipfs": "^0.42.1",
