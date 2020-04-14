@@ -99,3 +99,5 @@ export class PaperDB {
    */
   readonly files = filesAPIFactory(this)
 }
+
+export default PaperDB
