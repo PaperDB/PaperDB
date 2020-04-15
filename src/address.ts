@@ -1,5 +1,5 @@
 
-import { posix as path } from 'path'
+import path from 'path'
 import { cid as isIPFSCid } from 'is-ipfs'
 import OrbitDB from '@paper-db/orbit-db'
 
@@ -32,8 +32,7 @@ export const toOrbitDBAddr = (collectionId: string): string => {
     throw ERR_COLLECTION_ID_INVALID
   }
 
-  // import { posix as path } from 'path'
-  return path.join('/orbitdb', collectionId, ORBIT_DATASTORE_NAME)
+  return (path.posix || path).join('/orbitdb', collectionId, ORBIT_DATASTORE_NAME)
 }
 
 /**
