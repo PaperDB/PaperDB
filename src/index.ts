@@ -17,6 +17,7 @@ import { LocalKVStorage } from './local-kv'
 import { collectionAPIFactory } from './collections'
 import { filesAPIFactory } from './files'
 import { getKeyHash } from './orbit-db/identity-provider'
+import { indexeddbShim } from './shim'
 
 import type IPFS from 'ipfs'
 
@@ -65,6 +66,8 @@ export class PaperDB {
    * @param options options for the entire PaperDB
    */
   static async create (options: Options): Promise<PaperDB> {
+    await indexeddbShim()
+
     const ipfs = await createIPFSInstance(options)
     const _db = await PaperOrbitDB.createInstance(ipfs, options)
     const _localkv = await LocalKVStorage.create(options)
