@@ -21,6 +21,7 @@
   "dependencies": {
     "@paper-db/kv-storage": "^2.0.3",
     "@paper-db/orbit-db": "^0.24.0",
+    "@types/orbit-db": "git+https://github.com/PaperDB/orbit-db-types.git",
     "fs-extra": "^8.1.0",
     "ipfs": "^0.42.1",
     "ipfs-http-client": "^43.0.1",
@@ -35,7 +36,6 @@
     "@types/fs-extra": "^8.1.0",
     "@types/jest": "^25.1.4",
     "@types/node": "^12.12.35",
-    "@types/orbit-db": "git+https://github.com/PaperDB/orbit-db-types.git",
     "jest": "^25.1.0",
     "rimraf": "^3.0.2",
     "ts-jest": "^25.2.1",
