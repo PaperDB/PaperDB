@@ -1,4 +1,6 @@
 
+/* istanbul ignore file */
+
 /**
  * An in-memory shim of the IndexedDB API,
  * for Firefox Private Mode / Tor Browser
