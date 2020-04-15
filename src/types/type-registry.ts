@@ -89,7 +89,7 @@ export class ConverterRegistry<Registration extends { [type: string]: Conversion
  * Register custom type converters to PaperDB:
  * @example
  * ```
- *   import { TypeConverter, TYPE_REGISTRY } from '@paper-db/paper-db/src/types'
+ *   import { TypeConverter, TYPE_REGISTRY } from `@paper-db/paper-db/src/types`
  *   
  *   // create a custom type converter
  *   `@`TypeConverter.Conversion() // the decorator is for type checking, can be safely omitted
@@ -101,7 +101,7 @@ export class ConverterRegistry<Registration extends { [type: string]: Conversion
  *   TYPE_REGISTRY.add(Type1)
  *   
  *   // add into the TypeRegistration interface
- *   declare module '@paper-db/paper-db/src/types' {
+ *   declare module `@paper-db/paper-db/src/types` {
  *     interface TypeRegistration {
  *       'type1': TypeConverter.Converter;
  *     }

@@ -24,7 +24,7 @@ export class PaperDB {
   /**
    * the default type converter registry for any PaperDB instance
    */
-  readonly TYPE_REGISTRY = TYPE_REGISTRY
+  readonly TYPE_REGISTRY: typeof TYPE_REGISTRY = TYPE_REGISTRY
 
   /**
    * the options for the entire PaperDB
