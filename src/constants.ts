@@ -1,4 +1,6 @@
 
+import { env } from './utils'
+
 export const DEFAULT_NAME = 'paperdb'
 
 /**
@@ -23,9 +25,10 @@ export const DEFAULT_IPFS_KEY_NAME = 'userkey'
 export const PINLIST_KEY_PREFIX = '__pinlist__'
 
 /**
- * the default IPFS config
+ * the default IPFS config  
+ * using different configs in Node.js and Browser 
  */
-export const IPFS_CONFIG = {
+export const IPFS_CONFIG = !env.isBrowserLike ? {
   'Addresses': {
     'Swarm': [
       '/ip4/0.0.0.0/tcp/0',
@@ -39,4 +42,4 @@ export const IPFS_CONFIG = {
    * @todo add Bootstrap addresses, but do not overwrite the orginal addresses
    */
   // 'Bootstrap': [],
-}
+} : {}

@@ -15,6 +15,8 @@ interface Env {
   isBrowser: boolean;
   isWebWorker: boolean;
   isEnvWithDom: boolean;
+  /** isEnvWithDom || isWebWorker */
+  isBrowserLike: boolean;
 }
 
 /**
@@ -22,6 +24,7 @@ interface Env {
  */
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 export const env: Env = require('ipfs-utils/src/env')
+env.isBrowserLike = env.isEnvWithDom || env.isWebWorker
 
 /**
  * all valid data types in a json object 

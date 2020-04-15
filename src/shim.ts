@@ -40,7 +40,7 @@ const loadShim = (): void => {
 }
 
 const needShim = async (): Promise<boolean> => {
-  if (env.isBrowser || env.isWebWorker) {
+  if (env.isBrowserLike) {
     if (!globalthis.indexedDB) {
       return true
     }
