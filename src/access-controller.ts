@@ -28,7 +28,7 @@ export const ACConstDocType: PaperDBAccessController = (collection, paperdb) => 
       // use the preload document's type
       doctype = preloadEntry.payload.$type as string
     } else {
-      // throw new Error('No collection doctype specified.')
+      console.warn('No collection doctype specified for the PaperDB Access Controller: `ACConstDocType`')
       return (): true => true // the placeholder access controller callback, NOOP
     }
   }
