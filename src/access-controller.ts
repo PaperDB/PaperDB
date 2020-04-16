@@ -5,6 +5,7 @@ import { Collection } from './types/collection'
 import { ConversionI, TypedObjFrom } from './types/converter'
 import { Document } from './types/doc'
 import { createValidator } from './types/validator'
+import { getTypeConverter } from './types/type-registry'
 
 /**
  * The basic interface for any PaperDB Access Controller function
@@ -20,7 +21,20 @@ export interface PaperDBAccessController<DocType extends ConversionI = Conversio
  * if not, refuse writing into the orbitdb logstore
  */
 export const ACConstDocType: PaperDBAccessController = (collection, paperdb) => {
-  const typeValidator = createValidator(collection['docConverter'], paperdb)
+  let doctype = collection['doctype'] // the doctype specified (`collection.doctype`) has higher priority
+  if (!doctype) {
+    const preloadEntry = collection['preloadEntry']
+    if (preloadEntry?.payload?.$type) {
+      // use the preload document's type
+      doctype = preloadEntry.payload.$type as string
+    } else {
+      // throw new Error('No collection doctype specified.')
+      return (): true => true // the placeholder access controller callback, NOOP
+    }
+  }
+
+  // will be used if the preload document does not exist 
+  const typeValidator = createValidator(getTypeConverter(doctype), paperdb)
 
   return async (entry): Promise<boolean> => {
     if (!entry) { return false }
@@ -41,13 +55,13 @@ export const ACConstUser: PaperDBAccessController = (collection, paperdb) => {
       return false
     }
 
-    const docRef = new Document(entry, collection['docConverter'], paperdb)
+    const docRef = new Document(entry, paperdb)
     const currentUserId = await docRef.userId()
 
     // if the constant user is not stored
     if (!userId) {
       if (collection['preloadEntry']?.identity) { // if the preload document exists, use the creator of the preload document
-        const preloadDocRef = new Document(collection['preloadEntry'], collection['docConverter'], paperdb)
+        const preloadDocRef = new Document(collection['preloadEntry'], paperdb)
         userId = await preloadDocRef.userId()
       } else { // otherwise, use the first document provided
         userId = currentUserId

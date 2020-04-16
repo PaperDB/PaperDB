@@ -8,9 +8,13 @@ import { ConversionI, Convertible, TypedObj } from './types/converter'
 
 export interface CollectionCreationOptions<MetaInfo extends object = any, PreloadDoc extends Convertible = Convertible> {
   /**
+   * Set the doctype that the access controller `ACConstDocType` (also the default access controller) will use
+   * 
    * documents in this collection are all of this type (registered in the `TYPE_REGISTRY`)
+   * 
+   * if omitted, the preload document's type will be used (if the preload document exists) 
    */
-  doctype: string;
+  doctype?: string;
 
   /**
    * the optional matainfo to describe the collection
@@ -41,6 +45,16 @@ export interface DatastoreMetadata<MetaInfo extends object = any, PreloadDocObj 
   preload?: PreloadEntry<PreloadDocObj>;
 }
 
+const validateDoctype = (doctype: string | undefined, paperdb: PaperDB): void => {
+  if (doctype) {
+    // validate the doctype provided
+    const typeConverter = paperdb.TYPE_REGISTRY.get(doctype)
+    if (!typeConverter) {
+      throw new Error(`Cannot find the doctype ${doctype}. (ensure you registered it in the 'TYPE_REGISTRY')`)
+    }
+  }
+}
+
 /**
  * use of the API Factory:   
  * we can't define a property directly on a class method
@@ -49,32 +63,29 @@ export interface DatastoreMetadata<MetaInfo extends object = any, PreloadDocObj 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export const collectionAPIFactory = (paperdb: PaperDB) => {
   /**
-   * get a collection by the collection id
+   * Get a collection by the collection id
    * @param id PaperDB collection id (base58btc encoded cid of the OrbitDB manifest file)
-   * @param doctype documents in this collection should be all of this type (registered in the `TYPE_REGISTRY`)
+   * @param doctype The doctype that the access controller `ACConstDocType` (also the default access controller) will use, documents in this collection should be all of this type (registered in the `TYPE_REGISTRY`)
    * @param accessControllers access controllers for this Collection  
    */
-  function collection<DocType extends ConversionI = any> (id: string, doctype: string, accessControllers = DEFAULT_AC): Collection<DocType> {
+  function collection<DocType extends ConversionI = any> (id: string, doctype?: string, accessControllers = DEFAULT_AC): Collection<DocType> {
+    validateDoctype(doctype, paperdb)
     return new Collection<DocType>(
       id,
-      doctype,
-      paperdb
-    ).setAccessControllers(accessControllers)
+      paperdb)
+      .setAccessControllers(accessControllers)
+      .setDoctype(doctype)
   }
 
   /**
-   * create a new PaperDB Collection, or  
-   * load a Collection by its metainfo
+   * Create a new PaperDB Collection, or  
+   * Load a Collection by its metainfo
    */
   collection.create = async function <DocType extends ConversionI = any> (options: CollectionCreationOptions): Promise<Collection<DocType>> {
     const doctype = options.doctype
     const accessControllers = options.accessControllers ?? DEFAULT_AC
 
-    // get the type converter of the given doctype from the `TYPE_REGISTRY`
-    const typeConverter = paperdb.TYPE_REGISTRY.get(doctype) as DocType
-    if (!typeConverter) {
-      throw new Error(`Cannot find the doctype ${doctype}. (ensure you registered it in the 'TYPE_REGISTRY')`)
-    }
+    validateDoctype(doctype, paperdb)
 
     // build the preload entry
     const preloadEntry = await (
@@ -105,9 +116,8 @@ export const collectionAPIFactory = (paperdb: PaperDB) => {
     // create the Collection instance
     const collection = new Collection<DocType>(
       collectionId,
-      doctype,
       paperdb
-    ).setAccessControllers(accessControllers)
+    ).setAccessControllers(accessControllers).setDoctype(doctype)
 
     // get the collection ready
     await collection['ready']()

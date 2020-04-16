@@ -12,21 +12,15 @@ import { getTypeConverter } from './type-registry'
 export const PRELOAD_DOCUMENT_ID = '__preload__'
 
 export class Document<DocType extends ConversionI = any> {
-  private readonly docConverter: DocType
-
   /**
    * create a new PaperDB Document reference
    * @param entry an OrbitDB entry or the preloaded entry of a Collection
-   * @param doctype the type converter of the document type
    * @param paperdb the root PaperDB instance
    */
   constructor (
     private readonly entry: PreloadEntry<TypedObjFrom<DocType>> | OrbitDBEntryLog<TypedObjFrom<DocType>>,
-    doctype: string | DocType,
     private readonly paperdb: PaperDB,
-  ) {
-    this.docConverter = getTypeConverter(doctype)
-  }
+  ) { }
 
   /**
    * The ID of the document (a multihash)  
@@ -41,7 +35,13 @@ export class Document<DocType extends ConversionI = any> {
    * Retrieves all data in the document as a class instance of the DocType. 
    */
   async data (): Promise<InstanceType<DocType>> {
-    return this.docConverter.fromTypedObj(this.entry.payload, this.paperdb) as Promisable<InstanceType<DocType>>
+    const payload = this.entry.payload
+
+    // get the TypeConverter by the payload's `$type` property
+    const doctype: string = payload.$type
+    const docConverter = getTypeConverter(doctype)
+
+    return docConverter.fromTypedObj(payload, this.paperdb) as Promisable<InstanceType<DocType>>
   }
 
   /**

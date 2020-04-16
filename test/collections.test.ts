@@ -157,7 +157,6 @@ describe('PaperDB Collection & Document', () => {
         $type: 'collection-ref' as const,
         $v: 0 as const,
         id: collection0.id,
-        doctype: 'date',
       }
     })
 
@@ -172,7 +171,7 @@ describe('PaperDB Collection & Document', () => {
 
     test('from TypedObj', () => {
       const c = Collection.fromTypedObj(obj, paperdb0)
-      expect(c).toStrictEqual(new Collection(obj.id, 'date', paperdb0))
+      expect(c).toStrictEqual(new Collection(obj.id, paperdb0))
 
       expect(() => Collection.fromTypedObj({ ...obj, $type: undefined as any }, paperdb0)).toThrowError()
       expect(() => Collection.fromTypedObj({ ...obj, $type: 'aaaa' as any }, paperdb0)).toThrowError()
@@ -183,9 +182,6 @@ describe('PaperDB Collection & Document', () => {
 
       expect(() => Collection.fromTypedObj({ ...obj, id: undefined as any }, paperdb0)).toThrowError()
       expect(() => Collection.fromTypedObj({ ...obj, id: 1 as any }, paperdb0)).toThrowError()
-
-      expect(() => Collection.fromTypedObj({ ...obj, doctype: undefined as any }, paperdb0)).toThrowError()
-      expect(() => Collection.fromTypedObj({ ...obj, doctype: 1 as any }, paperdb0)).toThrowError()
     })
   })
 

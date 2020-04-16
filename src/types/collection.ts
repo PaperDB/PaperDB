@@ -48,19 +48,12 @@ export interface CollectionRefObj extends TypedObj<'collection-ref', 0> {
    * (base58btc encoded cid of the OrbitDB manifest file)
    */
   id: string;
-
-  /**
-   * documents in this collection are all of this type (registered in the `TYPE_REGISTRY`)
-   */
-  doctype: string;
 }
 
 @Conversion<CollectionRefObj>()
 export class Collection<DocType extends ConversionI = any> {
   static readonly $type = 'collection-ref'
   static readonly $v = 0
-
-  private readonly docConverter: DocType
 
   /**
    * create a new PaperDB Collection Reference (not loaded)
@@ -69,18 +62,14 @@ export class Collection<DocType extends ConversionI = any> {
    */
   constructor (
     public readonly id: string,
-    doctype: string | DocType,
     private readonly paperdb: PaperDB,
-  ) {
-    this.docConverter = getTypeConverter(doctype)
-  }
+  ) { }
 
   toTypedObj (): CollectionRefObj {
     return {
       $type: Collection.$type,
       $v: 0,
       id: this.id,
-      doctype: this.docConverter.$type,
     }
   }
 
@@ -94,13 +83,12 @@ export class Collection<DocType extends ConversionI = any> {
     if (
       obj.$type !== this.$type ||
       obj.$v !== 0 ||
-      typeof obj.id !== 'string' ||
-      typeof obj.doctype !== 'string'
+      typeof obj.id !== 'string'
     ) {
       throw ERR_TYPED_OBJ_INVALID
     }
 
-    return new Collection(obj.id, obj.doctype, paperdb)
+    return new Collection(obj.id, paperdb)
   }
 
   /**
@@ -133,10 +121,12 @@ export class Collection<DocType extends ConversionI = any> {
         throw ERR_PRELOAD_ENTRY_INVALID
       }
 
-      // validate whether the preloaded document object (preloadEntry.payload) is of the specific doctype
-      const typeValidator = createValidator(this.docConverter, this.paperdb)
-      if (!await typeValidator(metadata.preload.payload)) {
-        throw new TypeError(`The preload document of the collection is invalid. The document is not of the type '${this.docConverter.$type}'`)
+      if (this.doctype) {
+        // validate whether the preloaded document object (preloadEntry.payload) is of the doctype specified (`this.doctype`)
+        const typeValidator = createValidator(getTypeConverter(this.doctype), this.paperdb)
+        if (!await typeValidator(metadata.preload.payload)) {
+          throw new TypeError(`The preload document of the collection is invalid. The document is not of the type '${this.doctype}'`)
+        }
       }
 
       return Object.freeze(metadata.preload)
@@ -177,7 +167,7 @@ export class Collection<DocType extends ConversionI = any> {
 
     return {
       metainfo: this.metaInfo,
-      preloadDocRef: preloadEntry ? new Document(preloadEntry, this.docConverter, this.paperdb) : undefined,
+      preloadDocRef: preloadEntry ? new Document(preloadEntry, this.paperdb) : undefined,
     }
   }
 
@@ -200,6 +190,8 @@ export class Collection<DocType extends ConversionI = any> {
   /**
    * Set PaperDB access controllers for this Collection  
    * only available BEFORE the Collection is ready
+   * 
+   * Override the default PaperDB access controller `[ACConstDocType]` 
    */
   setAccessControllers (accessControllers: ReadonlyArray<PaperDBAccessController<DocType>>): this {
     if (this.logstore) {
@@ -211,6 +203,29 @@ export class Collection<DocType extends ConversionI = any> {
     }
 
     this.accessControllers = accessControllers
+
+    return this
+  }
+
+  /**
+   * The doctype that the PaperDB access controller `ACConstDocType` will use  
+   */
+  private doctype: string | undefined
+
+  /**
+   * Set the doctype that the PaperDB access controller `ACConstDocType` (also the default access controller) will use  
+   * 
+   * if omitted, the preload document's type will be used (if the preload document exists),  
+   * `setDoctype` always has higher priority
+   *  
+   * only available BEFORE the Collection is ready
+   */
+  setDoctype (doctype: string | undefined): this {
+    if (this.logstore) {
+      throw new Error('The Collection doctype cannot be changed after the Collection is ready.')
+    }
+
+    this.doctype = doctype
 
     return this
   }
@@ -263,7 +278,7 @@ export class Collection<DocType extends ConversionI = any> {
    * @param entry 
    */
   private _document (entry: PreloadEntry<TypedObjFrom<DocType>> | OrbitDBEntryLog<TypedObjFrom<DocType>>): Document {
-    return new Document(entry, this.docConverter, this.paperdb)
+    return new Document(entry, this.paperdb)
   }
 
   /**
