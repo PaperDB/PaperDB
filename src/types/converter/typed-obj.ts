@@ -8,6 +8,8 @@
  * or types that json doesn't support natively (such as Date, BigInt, literal undefined, etc.)
  */
 export type TypedObj<Type extends string, Version extends number = 1> = {
+  [x: string]: any;
+
   /**
    * name of the object type
    * 
