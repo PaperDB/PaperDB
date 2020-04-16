@@ -366,7 +366,7 @@ export class Collection<DocType extends ConversionI = any> {
    * Subscribe the event which is emitted when a new peer connects via ipfs pubsub  
    * @see https://github.com/orbitdb/orbit-db/blob/master/API.md#peer
    */
-  async onPeer (cb: (/** @param peer id of the new peer */peer: string) => void): Promise<UnsubFn> {
+  async onPeer (cb: (/** @param peer id of the new peer */peer: string) => any): Promise<UnsubFn> {
     await this.ready()
     return createEventSubscriber(this.events, 'peer', cb)
   }
@@ -379,7 +379,7 @@ export class Collection<DocType extends ConversionI = any> {
    * 
    * @see https://github.com/orbitdb/orbit-db/blob/master/API.md#replicated
    */
-  async onSnapshot (cb: () => void): Promise<UnsubFn> {
+  async onSnapshot (cb: () => any): Promise<UnsubFn> {
     await this.ready()
     return createEventSubscriber(this.events, 'replicated', cb)
   }
