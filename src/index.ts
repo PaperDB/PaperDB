@@ -110,6 +110,14 @@ export class PaperDB {
   userId (): Promise<string> {
     return getKeyHash(this._db.identity.id)
   }
+
+  /**
+   * get the peer information used for peer connection
+   */
+  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+  peerInfo () {
+    return this.ipfs.id()
+  }
 }
 
 export default PaperDB

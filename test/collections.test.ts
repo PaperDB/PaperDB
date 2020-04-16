@@ -70,7 +70,7 @@ describe('PaperDB Collection & Document', () => {
 
     test('open the collection in a connected peer', async () => {
       collection1 = paperdb1.collection(collectionId, 'date')
-      const peerId1 = (await paperdb1.ipfs.id()).id
+      const peerId1 = (await paperdb1.peerInfo()).id
 
       await assertCollection(collection1, paperdb0)
 
