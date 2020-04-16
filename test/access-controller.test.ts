@@ -1,11 +1,14 @@
 
 import { ACConstDocType, ACConstUser, createACCallback, DEFAULT_AC } from '../src/access-controller'
 import type { Collection } from '../src/types/collection'
-import { ConverterTest1V1, ConverterTest1V2 } from './types/mock'
+import { TYPE_REGISTRY, Types } from '../src/types/'
+import { ConverterTest1V2 } from './types/mock'
 import { mockPaperdb, IdA, IdB } from './mock'
 
+TYPE_REGISTRY.add(ConverterTest1V2)
+
 const mockCollection0 = {
-  docConverter: ConverterTest1V2,
+  doctype: ConverterTest1V2.$type,
 } as any as Collection
 
 describe('PaperDB Access Controllers', () => {
@@ -33,7 +36,7 @@ describe('PaperDB Access Controllers', () => {
         },
       },
       { // [5]
-        payload: await new ConverterTest1V1().toTypedObj(),
+        payload: new Types.PaperDBDate().toTypedObj(),
         identity: {
           id: IdA,
         },
@@ -112,7 +115,6 @@ describe('PaperDB Access Controllers', () => {
 
       beforeAll(() => {
         cb1 = ACConstUser({
-          docConverter: ConverterTest1V2,
           preloadEntry: mockEntries[5],
         } as any as Collection, mockPaperdb)
       })
