@@ -45,11 +45,10 @@ export interface Converter<OBJ extends TypedObj<any, any> = TypedObj<any, any>, 
    * - a plain object follows the specific TypedObj format, has all valid `$type` and `$v` (`$v` can be omitted if it is 1), and other properties  
    * --  ~~if a property value is also a TypedObj, it might have already been converted to its target data type~~ (will never happen, as the `obj` always converts as a whole) 
    * - an instance of the target data type, returns itself or wrapped with `new D(obj) -> D`
-   * - other class instances that can be converted to the target data type (`DATA`)
    * 
    * @param paperdb - the root PaperDB instance
    */
-  fromTypedObj (obj: OBJ, paperdb: PaperDB): Promisable<DATA>;
+  fromTypedObj (obj: OBJ | DATA, paperdb: PaperDB): Promisable<DATA>;
 
   /**
    * Check whether the given `obj` follows the specific TypedObj format, has all valid properties (and the valid `$type` and `$v`)
