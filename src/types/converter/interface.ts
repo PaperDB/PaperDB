@@ -90,10 +90,12 @@ export interface ConversionI<OBJ extends TypedObj<any, any> = TypedObj<any, any>
  */
 export type TypedObjResult<T extends Convertible> = NonPromisable<ReturnType<T['toTypedObj']>>
 
+type NonConvertible<T> = T extends Convertible<any> ? never : T
+
 /**
  * get the TypedObj which the Converter class can convert from
  */
-export type TypedObjFrom<T extends Converter> = Parameters<T['fromTypedObj']>[0]
+export type TypedObjFrom<T extends Converter> = NonConvertible<Parameters<T['fromTypedObj']>[0]>
 
 export const isValidTypeConverter = <Type extends string = string> (converter: Converter, type?: Type): converter is Converter<TypedObj<Type>> => {
   if (!converter) {
