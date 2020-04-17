@@ -29,7 +29,7 @@ export class PaperDBDate extends Date {
     return new PaperDBTimestamp(this.getTime())
   }
 
-  static fromTypedObj (obj: PaperDBDateObj | PaperDBDate | Date): PaperDBDate {
+  static fromTypedObj (obj: PaperDBDateObj | PaperDBDate): PaperDBDate {
     if (obj instanceof PaperDBDate) {
       return obj
     } else if (obj instanceof Date) {
