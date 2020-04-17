@@ -24,22 +24,43 @@ export const DEFAULT_IPFS_KEY_NAME = 'userkey'
  */
 export const PINLIST_KEY_PREFIX = '__pinlist__'
 
+const WEBSOCKET_STAR_SERVERS = [
+  '/dns4/ws-star.discovery.libp2p.io/tcp/443/wss/p2p-websocket-star',
+  '/dns4/raw.chat/tcp/4000/wss/p2p-websocket-star',
+  '/dns4/1.wsstar.aira.life/tcp/443/wss/p2p-websocket-star/',
+  '/dns4/2.wsstar.aira.life/tcp/443/wss/p2p-websocket-star/',
+  '/dns4/3.wsstar.aira.life/tcp/443/wss/p2p-websocket-star/',
+  '/dns4/ws-star1.par.dwebops.pub/tcp/443/wss/p2p-websocket-star/',
+  '/dns4/libp2p-signaling.herokuapp.com/tcp/443/wss/p2p-websocket-star/',
+  '/dns4/ws.syn.ci/tcp/443/wss/p2p-websocket-star',
+  '/dns4/ren.chlu.io/tcp/443/wss/p2p-websocket-star',
+]
+
 /**
  * the default IPFS config  
  * using different configs in Node.js and Browser 
  */
-export const IPFS_CONFIG = !env.isBrowserLike ? {
-  'Addresses': {
-    'Swarm': [
-      '/ip4/0.0.0.0/tcp/0',
-      '/ip6/::/tcp/0',
-      '/ip4/127.0.0.1/tcp/0/ws',
-    ],
-    'API': '/ip4/127.0.0.1/tcp/0',
-    'Gateway': '/ip4/127.0.0.1/tcp/0',
-  },
-  /**
-   * @todo add Bootstrap addresses, but do not overwrite the orginal addresses
-   */
-  // 'Bootstrap': [],
-} : {}
+export const IPFS_CONFIG = !env.isBrowserLike
+  ? { // for Node.js
+    'Addresses': {
+      'Swarm': [
+        '/ip4/0.0.0.0/tcp/0',
+        '/ip6/::/tcp/0',
+        '/ip4/127.0.0.1/tcp/0/ws',
+        ...WEBSOCKET_STAR_SERVERS,
+      ],
+      'API': '/ip4/127.0.0.1/tcp/0',
+      'Gateway': '/ip4/127.0.0.1/tcp/0',
+    },
+    /**
+     * @todo add Bootstrap addresses, but do not overwrite the orginal addresses
+     */
+    // 'Bootstrap': [],
+  }
+  : { // for Browser
+    'Addresses': {
+      'Swarm': [
+        ...WEBSOCKET_STAR_SERVERS,
+      ],
+    },
+  }
