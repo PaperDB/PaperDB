@@ -32,8 +32,6 @@ export class PaperDBDate extends Date {
   static fromTypedObj (obj: PaperDBDateObj | PaperDBDate): PaperDBDate {
     if (obj instanceof PaperDBDate) {
       return obj
-    } else if (obj instanceof Date) {
-      return new PaperDBDate(obj)
     }
 
     if (obj.$type !== 'date' || typeof obj.iso8601 !== 'string') {

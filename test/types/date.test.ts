@@ -17,11 +17,7 @@ describe('Data Type: PaperDBDate', () => {
   })
 
   test('from its instance', () => {
-    const date0 = new Date(dateStr)
     const date1 = new PaperDBDate(dateStr)
-
-    expect(PaperDBDate.fromTypedObj(date0)).not.toBe(date0) // Object.is
-    expect(PaperDBDate.fromTypedObj(date0).toTypedObj()).toStrictEqual(obj)
 
     expect(PaperDBDate.fromTypedObj(date1)).toBe(date1) // Object.is
     expect(PaperDBDate.fromTypedObj(date1).toTypedObj()).toStrictEqual(obj)
