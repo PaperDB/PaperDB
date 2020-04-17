@@ -8,7 +8,8 @@ import { rmrf } from '../utils'
 
 import Identities, { Identity, IdentityAsJson } from 'orbit-db-identity-provider'
 import { createIPFSInstance } from '../../src/ipfs'
-import { IPFSIdentityProvider, getPrivateKey, importPublicKey, getKeyHash, ERR_IDENTITY_JSON_INVALID } from '../../src/orbit-db/identity-provider'
+import { getPrivateKey, importPublicKey, getKeyHash } from '../../src/identity-utils'
+import { IPFSIdentityProvider, ERR_IDENTITY_JSON_INVALID } from '../../src/orbit-db/identity-provider'
 
 const dir = path.join(path.dirname(__dirname), 'identity-provider-test-0')
 const identityStorePath0 = path.join(dir, '/keystore0')

@@ -16,10 +16,17 @@ import { PaperOrbitDB } from './orbit-db'
 import { LocalKVStorage } from './local-kv'
 import { collectionAPIFactory } from './collections'
 import { filesAPIFactory } from './files'
-import { getKeyHash } from './orbit-db/identity-provider'
+import { getKeyHash } from './identity-utils'
 import { indexeddbShim } from './shim'
 
 import type IPFS from 'ipfs'
+
+// export internal modules
+import * as AccessController from './access-controller'
+import * as Types from './types'
+import * as OrbitDBUtils from './orbit-db'
+import * as IdentityUtils from './identity-utils'
+export { AccessController, Types, OrbitDBUtils, IdentityUtils }
 
 export class PaperDB {
   /**

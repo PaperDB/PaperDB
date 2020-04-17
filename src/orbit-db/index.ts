@@ -9,13 +9,21 @@ import { Options, DEFAULT_OPTIONS } from '../options'
 
 import LogStore from './logstore'
 import PaperDBAC, { ACCallback } from './access-controller'
-import IPFSIdentityProvider, { ensureIPFSKey } from './identity-provider'
+import IPFSIdentityProvider from './identity-provider'
+import { ensureIPFSKey } from '../identity-utils'
 
 OrbitDB.addDatabaseType(LogStore.type, LogStore)
 AccessControllers.addAccessController({ AccessController: PaperDBAC })
 Identities.addIdentityProvider(IPFSIdentityProvider)
 
-interface StoreOptions<T = any, MetaData = any> {
+export {
+  LogStore,
+  PaperDBAC,
+  ACCallback,
+  IPFSIdentityProvider,
+}
+
+export interface StoreOptions<T = any, MetaData = any> {
   /**
    * metadata for this DataStore
    * only vaild when creating a new DataStore
