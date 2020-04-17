@@ -6,10 +6,9 @@
 import CID from 'cids'
 import type { PaperDB } from '../index'
 import { stringifyIPFSPath } from '../ipfs'
-import { Bytes } from '../utils'
 import { Conversion, ERR_TYPED_OBJ_INVALID, TypedObj } from './converter'
 
-export type FileData = Bytes | Blob | string | Iterable<number> | Iterable<Bytes> | AsyncIterable<Bytes>
+export type FileData = Buffer | Blob
 
 /**
  * Reference to a file stored in IPFS (dag-pb + UnixFS)  
@@ -129,19 +128,30 @@ export class IPFSFile {
     data: FileData,
     name?: string
   ): Promise<IPFSFile> {
-    const it = paperdb.ipfs.add(data, {
+    // eslint-disable-next-line @typescript-eslint/await-thenable
+    const res = await paperdb.ipfs.add(data, {
       pin: true,
     })
 
-    for await (const result of it) {
-      return new IPFSFile(
-        paperdb,
-        result.cid,
-        name,
-        result.size
-      )
+    let result
+    if (Array.isArray(res)) { // work in both js-ipfs 0.40 and > 0.41 
+      result = res[0]
+    } else {
+      for await (const i of res) {
+        result = i
+        break
+      }
     }
 
-    throw new Error('Failed to add files to IPFS.')
+    if (!result) {
+      throw new Error('Failed to add files to IPFS.')
+    }
+
+    return new IPFSFile(
+      paperdb,
+      result['hash'] ?? result.cid,
+      name,
+      result.size
+    )
   }
 }

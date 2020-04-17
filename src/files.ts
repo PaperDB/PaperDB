@@ -37,7 +37,15 @@ export const filesAPIFactory = (paperdb: PaperDB) => {
     const ipfsAltCat = paperdb.options.ipfsAltCat
 
     const promises: CancelablePromise<Buffer>[] = [
-      concatItBuffer(paperdb.ipfs.cat(ref, { length: size })),
+      (async (): Promise<Buffer> => { // work in both js-ipfs 0.40 and > 0.40
+        // eslint-disable-next-line @typescript-eslint/await-thenable
+        const l = await paperdb.ipfs.cat(ref, { length: size })
+        if (l instanceof Buffer) {
+          return l
+        } else {
+          return concatItBuffer(l)
+        }
+      })(),
     ]
 
     // if the alternative method to `ipfs.cat` exists,  
@@ -57,8 +65,12 @@ export const filesAPIFactory = (paperdb: PaperDB) => {
     // add the data back to IPFS
     // in case that the data is fetched from the alternative `ipfs.cat` method, or
     // solve the possible bug that an object cannot be fetched multiple times from a single remote peer (possibly caused by the single wantlist)
-    for await (const _ of paperdb.ipfs.add(buf, { pin: true })) {
-      void (_) // do nothing
+    // eslint-disable-next-line @typescript-eslint/await-thenable
+    const l = await paperdb.ipfs.add(buf, { pin: true })
+    if (!Array.isArray(l)) { // work in both js-ipfs 0.40 and > 0.40
+      for await (const _ of l) {
+        void (_) // do nothing
+      }
     }
 
     return buf
